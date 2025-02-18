@@ -1,5 +1,6 @@
 import random
 
+
 # Difficulty Class
 class Difficulty:
     def __init__(self, name, enemy_damage, player_hp):
@@ -8,9 +9,9 @@ class Difficulty:
         self.player_hp = player_hp
 
 # Define Difficulty Levels
-easy = Difficulty("I'm too young to die", enemy_damage=10, player_hp=150)
+easy = Difficulty("I'm too young to die", enemy_damage=10, player_hp=100)
 normal = Difficulty("Bring it on!", enemy_damage=20, player_hp=100)
-hard = Difficulty("Ultra-Violence", enemy_damage=35, player_hp=75)
+hard = Difficulty("Ultra-Violence", enemy_damage=35, player_hp=100)
 
 # Get User Input from choosing tthe skill level
 difficulty_input = input("Choose skill level: I'm too young to die, Bring it on!, Ultra-Violence\n").lower()
@@ -59,7 +60,7 @@ class Chainsaw:
         print(f" {player.name} regained {self.hp_gain} HP! Total HP: {player.hp}")
         return self.damage
 
-# Player Class
+# Player Class status
 class Player:
     def __init__(self, name, difficulty, weapon1, weapon2):
         self.name = name
@@ -119,7 +120,7 @@ chainsaw = Chainsaw("Rip & Tear", damage=30, hp_gain=20)
 
 # Create Player & Enemy
 player = Player("Alice", chosen_difficulty, shotgun, chainsaw)
-enemy = Enemy("Demon", hp=100, damage=20)
+enemy = Enemy("Demon", hp=100, damage=22)
 
 print(f"\n Starting game on {player.difficulty.name} mode with a {player.weapons[player.current_weapon].name}!\n")
 
@@ -134,7 +135,7 @@ while enemy.hp > 0 and player.hp > 0:
     elif action == "switch":
         player.switch_weapon()
     else:
-        print("You waited... The enemy is still there.")
+        print("You waited...The enemy is still there.")
 
     if player.hp <= 0:
         print(" You died!")

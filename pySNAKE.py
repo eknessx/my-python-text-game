@@ -1,4 +1,20 @@
 import random
+import sys
+import time
+
+def loading_bar(duration=3, bar_length=25):
+    print("\nLoading Game please wait...")
+    for i in range(bar_length + 1):
+        progress = "█" * i + "-" * (bar_length - i)
+        percentage = int((i / bar_length) * 100)
+        sys.stdout.write(f"\r[{progress}] {percentage}%")
+        sys.stdout.flush()
+        time.sleep(duration / bar_length)
+    print("\nGame Loaded!\n")
+    print("\n made by ekness\n")
+
+# Run the loading bar before starting the game
+loading_bar()
 # Difficulty Class
 class Difficulty:
     def __init__(self, name, enemy_damage, player_hp):

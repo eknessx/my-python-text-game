@@ -2,6 +2,7 @@ import random
 import sys
 import time
 
+
 def loading_bar(duration=3, bar_length=25):
     print("\nLoading Game please wait...")
     for i in range(bar_length + 1):
@@ -12,9 +13,9 @@ def loading_bar(duration=3, bar_length=25):
         time.sleep(duration / bar_length)
     print("\nGame Loaded!\n")
     print("\n made by ekness\n")
-
 # Run the loading bar before starting the game
 loading_bar()
+
 # Difficulty Class
 class Difficulty:
     def __init__(self, name, enemy_damage, player_hp):
@@ -25,13 +26,15 @@ class Difficulty:
 # Define Difficulty Levels
 easy = Difficulty("I'm too young to die", enemy_damage=10, player_hp=100)
 normal = Difficulty("Bring it on!", enemy_damage=20, player_hp=100)
-hard = Difficulty("Ultra-Violence", enemy_damage=35, player_hp=100)
+hard = Difficulty("pure-Violence", enemy_damage=35, player_hp=100)
+ultrakill=Difficulty("Ultra-kill must die", enemy_damage=40,player_hp=120)
 
-# Weapon Classes
+# Weapon Class
 class Weapon:
     def __init__(self, name, damage):
         self.name = name
         self.damage = damage
+
 
 class RangedWeapon(Weapon):
     def __init__(self, name, damage, ammo):
@@ -51,6 +54,7 @@ class RangedWeapon(Weapon):
         self.ammo += amount
         print(f"{self.name} reloaded! Ammo: {self.ammo}")
 
+#Chainsaw class
 class Chainsaw(Weapon):
     def __init__(self, name, damage, hp_gain):
         super().__init__(name, damage)
@@ -62,6 +66,7 @@ class Chainsaw(Weapon):
         print(f"{player.name} regained {self.hp_gain} HP! Total HP: {player.hp}")
         return self.damage
 
+#ThunderPunch class
 class ThunderPunch(Weapon):
     def __init__(self, name, damage, cooldown=2):
         super().__init__(name, damage)
@@ -77,10 +82,10 @@ class ThunderPunch(Weapon):
         if random.randint(1, 10) == 1:  # 10% chance critical hit
             print("Critical hit! Massive damage and HP restored!")
             damage_dealt = 80
-            hp_gain = 50
+            hp_gain = 70
         else:
             damage_dealt = self.base_damage
-            hp_gain = 10
+            hp_gain = 30
 
         player.hp += hp_gain
         print(f"{player.name} regained {hp_gain} HP! Total HP: {player.hp}")
@@ -112,11 +117,15 @@ class Player:
 
         if damage_dealt > 0:
             enemy.take_damage(damage_dealt)
+            if enemy.hp <= 0:
+                self.reload_on_kill()
 
     def punch(self, enemy):
         damage_dealt = self.melee.attack(self)
         if damage_dealt > 0:
             enemy.take_damage(damage_dealt)
+            if enemy.hp <= 0:
+                self.reload_on_kill()
 
     def switch_weapon(self):
         self.current_weapon = (self.current_weapon + 1) % len(self.weapons)
@@ -134,6 +143,16 @@ class Player:
         
         self.hp -= amount
         print(f"{self.name} took {amount} damage! HP: {self.hp}")
+    #Gains ammo on kills and gets extra heal points on chaisaw kills
+    def reload_on_kill(self):
+        weapon = self.weapons[self.current_weapon]
+        if isinstance(weapon, RangedWeapon):
+            ammo_gained = random.randint(1, 5)
+            weapon.reload(ammo_gained)
+            print(f"You looted {ammo_gained} ammo!")
+        elif isinstance(weapon, Chainsaw):
+            self.hp += 10
+            print(f"Chainsaw kill! {self.name} gained 10 extra HP! HP: {self.hp}")
 
 # Enemy Class
 class Enemy:
@@ -157,30 +176,35 @@ class Boss(Enemy):
 # Function to create new enemies (normal and boss)
 def create_enemy(round_number, difficulty):
     if round_number % 3 == 0:  # Every 3 rounds, spawn a boss
-        return Boss(f"Cyberdemon (Round {round_number})", hp=200 + (round_number * 20), damage=difficulty.enemy_damage + (round_number * 5))
+        return Boss(f"Cyberdemon (Round {round_number})", hp=200 + (round_number * 20), damage=difficulty.enemy_damage + (round_number * 3))
     else:
         return Enemy(f"Imp (Round {round_number})", hp=100 + (round_number * 10), damage=difficulty.enemy_damage + (round_number * 2))
 
 # Create weapons
-shotgun = RangedWeapon("Super-Shotgun", damage=40, ammo=4)
-chainsaw = Chainsaw("Chainsaw", damage=38, hp_gain=47)
-thunder_punch = ThunderPunch("Thunder Punch", damage=15 ,)
+pistol = RangedWeapon("Pistol", damage=30, ammo=10)
+shotgun = RangedWeapon("Super-Shotgun", damage=45, ammo=5)
+chainsaw = Chainsaw("Chainsaw", damage=32, hp_gain=45)
+thunder_punch = ThunderPunch("Thunder Punch", damage=39, cooldown=1)
+valkyrie = RangedWeapon("Valkyrie", damage=75, ammo=4)
+iginite = RangedWeapon("Iginite", damage=50, ammo=6)
 
 # Get User Input for choosing the skill level
-difficulty_input = input("Choose skill level: I'm too young to die, Bring it on!, Ultra-Violence\n").lower()
+difficulty_input = input("Choose skill level:\n I'm too young to die\n Bring it on!\n pure-Violence\n Ultrakill must die\n").lower()
 
 if "young" in difficulty_input:
     chosen_difficulty = easy
 elif "bring" in difficulty_input:
     chosen_difficulty = normal
-elif "ultra" in difficulty_input:
+elif "pure" in difficulty_input:
     chosen_difficulty = hard
+elif "ultra" in difficulty_input:
+    chosen_difficulty=ultrakill
 else:
     print("Invalid choice, defaulting to Normal mode.")
     chosen_difficulty = normal
 
 # Create Player
-player = Player("Alice", chosen_difficulty, shotgun, chainsaw, thunder_punch)
+player = Player("Alice", chosen_difficulty, pistol, chainsaw, thunder_punch)
 
 print(f"\nStarting game on {player.difficulty.name} mode with a {player.weapons[player.current_weapon].name}!\n")
 
@@ -189,7 +213,7 @@ round_number = 1
 while player.hp > 0:
     enemy = create_enemy(round_number, chosen_difficulty)  
     print(f"\nA {enemy.name} has appeared! HP: {enemy.hp}, Damage: {enemy.damage}\n")
-
+    
     while enemy.hp > 0 and player.hp > 0:
         action = input("Do you want to attack, punch, switch weapon, or wait? (attack/punch/switch/wait): ").lower()
                                 
@@ -204,7 +228,7 @@ while player.hp > 0:
         elif action == "switch":
             player.switch_weapon()
         else:
-            print("You waited...WAIT U GETT-.")
+            print("You waited...")
 
         player.reduce_cooldowns()
 
@@ -213,4 +237,10 @@ while player.hp > 0:
             break
         elif enemy.hp <= 0:
             print(f"\nYou defeated {enemy.name}!")
-            round_number += 1  
+            round_number += 1
+            if isinstance(enemy, Boss):
+                if len(player.weapons) < 4:
+                    new_weapon = random.choice([shotgun, valkyrie, iginite])
+                    player.weapons.append(new_weapon)
+                    print(f"{new_weapon.name} has been added to your inventory!")
+

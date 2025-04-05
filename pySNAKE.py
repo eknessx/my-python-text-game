@@ -2,7 +2,6 @@ import random
 import sys
 import time
 
-
 def loading_bar(duration=3, bar_length=25):
     print("\nLoading Game please wait...")
     for i in range(bar_length + 1):
@@ -13,8 +12,6 @@ def loading_bar(duration=3, bar_length=25):
         time.sleep(duration / bar_length)
     print("\nGame Loaded!\n")
     print("\n made by ekness\n")
-# Run the loading bar before starting the game
-loading_bar()
 
 # Difficulty Class
 class Difficulty:
@@ -34,7 +31,6 @@ class Weapon:
     def __init__(self, name, damage):
         self.name = name
         self.damage = damage
-
 
 class RangedWeapon(Weapon):
     def __init__(self, name, damage, ammo):
@@ -143,7 +139,7 @@ class Player:
         
         self.hp -= amount
         print(f"{self.name} took {amount} damage! HP: {self.hp}")
-    #Gains ammo on kills and gets extra heal points on chaisaw kills
+    #Gains ammo on kills and gets extra heal points on chainsaw kills
     def reload_on_kill(self):
         weapon = self.weapons[self.current_weapon]
         if isinstance(weapon, RangedWeapon):
@@ -188,59 +184,64 @@ thunder_punch = ThunderPunch("Thunder Punch", damage=39, cooldown=1)
 valkyrie = RangedWeapon("Valkyrie", damage=75, ammo=4)
 iginite = RangedWeapon("Iginite", damage=50, ammo=6)
 
-# Get User Input for choosing the skill level
-difficulty_input = input("Choose skill level:\n I'm too young to die\n Bring it on!\n pure-Violence\n Ultrakill must die\n").lower()
+def main():
+    loading_bar()
 
-if "young" in difficulty_input:
-    chosen_difficulty = easy
-elif "bring" in difficulty_input:
-    chosen_difficulty = normal
-elif "pure" in difficulty_input:
-    chosen_difficulty = hard
-elif "ultra" in difficulty_input:
-    chosen_difficulty=ultrakill
-else:
-    print("Invalid choice, defaulting to Normal mode.")
-    chosen_difficulty = normal
+    # Get User Input for choosing the skill level
+    difficulty_input = input("Choose skill level:\n I'm too young to die\n Bring it on!\n pure-Violence\n Ultrakill must die\n").lower()
 
-# Create Player
-player = Player("Alice", chosen_difficulty, pistol, chainsaw, thunder_punch)
+    if "young" in difficulty_input:
+        chosen_difficulty = easy
+    elif "bring" in difficulty_input:
+        chosen_difficulty = normal
+    elif "pure" in difficulty_input:
+        chosen_difficulty = hard
+    elif "ultra" in difficulty_input:
+        chosen_difficulty=ultrakill
+    else:
+        print("Invalid choice, defaulting to Normal mode.")
+        chosen_difficulty = normal
 
-print(f"\nStarting game on {player.difficulty.name} mode with a {player.weapons[player.current_weapon].name}!\n")
+    # Create Player
+    player = Player("Alice", chosen_difficulty, pistol, chainsaw, thunder_punch)
 
-# Game Loop (Endless Mode with Boss Fights)
-round_number = 1  
-while player.hp > 0:
-    enemy = create_enemy(round_number, chosen_difficulty)  
-    print(f"\nA {enemy.name} has appeared! HP: {enemy.hp}, Damage: {enemy.damage}\n")
-    
-    while enemy.hp > 0 and player.hp > 0:
-        action = input("Do you want to attack, punch, switch weapon, or wait? (attack/punch/switch/wait): ").lower()
+    print(f"\nStarting game on {player.difficulty.name} mode with a {player.weapons[player.current_weapon].name}!\n")
+
+    # Game Loop (Endless Mode with Boss Fights)
+    round_number = 1  
+    while player.hp > 0:
+        enemy = create_enemy(round_number, chosen_difficulty)  
+        print(f"\nA {enemy.name} has appeared! HP: {enemy.hp}, Damage: {enemy.damage}\n")
+        
+        while enemy.hp > 0 and player.hp > 0:
+            action = input("Do you want to attack, punch, switch weapon, or wait? (attack/punch/switch/wait): ").lower()
                                 
-        if action == "attack":
-            player.attack(enemy)
-            if enemy.hp > 0:
-                enemy.attack(player)
-        elif action == "punch":
-            player.punch(enemy)
-            if enemy.hp > 0:
-                enemy.attack(player)
-        elif action == "switch":
-            player.switch_weapon()
-        else:
-            print("You waited...")
+            if action == "attack":
+                player.attack(enemy)
+                if enemy.hp > 0:
+                    enemy.attack(player)
+            elif action == "punch":
+                player.punch(enemy)
+                if enemy.hp > 0:
+                    enemy.attack(player)
+            elif action == "switch":
+                player.switch_weapon()
+            else:
+                print("You waited...")
 
-        player.reduce_cooldowns()
+            player.reduce_cooldowns()
 
-        if player.hp <= 0:
-            print("\nGame Over! You fought bravely but couldn't survive.")
-            break
-        elif enemy.hp <= 0:
-            print(f"\nYou defeated {enemy.name}!")
-            round_number += 1
-            if isinstance(enemy, Boss):
-                if len(player.weapons) < 4:
-                    new_weapon = random.choice([shotgun, valkyrie, iginite])
-                    player.weapons.append(new_weapon)
-                    print(f"{new_weapon.name} has been added to your inventory!")
+            if player.hp <= 0:
+                print("\nGame Over! You fought bravely but couldn't survive.")
+                break
+            elif enemy.hp <= 0:
+                print(f"\nYou defeated {enemy.name}!")
+                round_number += 1
+                if isinstance(enemy, Boss):
+                    if len(player.weapons) < 4:
+                        new_weapon = random.choice([shotgun, valkyrie, iginite])
+                        player.weapons.append(new_weapon)
+                        print(f"{new_weapon.name} has been added to your inventory!")
 
+if __name__ == "__main__":
+    main()

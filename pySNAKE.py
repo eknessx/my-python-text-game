@@ -1,17 +1,12 @@
 import random
-import sys
+from rich.progress import Progress
 import time
 
-def loading_bar(duration=3, bar_length=25):
-    print("\nLoading Game please wait...")
-    for i in range(bar_length + 1):
-        progress = "█" * i + "-" * (bar_length - i)
-        percentage = int((i / bar_length) * 100)
-        sys.stdout.write(f"\r[{progress}] {percentage}%")
-        sys.stdout.flush()
-        time.sleep(duration / bar_length)
-    print("\nGame Loaded!\n")
-    print("\n made by ekness\n")
+with Progress() as progress:
+    task = progress.add_task("[blue]Processing...", total=100)
+    for step in range(100):
+        time.sleep(0.05)  # Simulate work
+        progress.update(task, advance=1)
 
 # Difficulty Class
 class Difficulty:

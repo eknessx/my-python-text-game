@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Who is considered the father of computer science?",
+    "answer": "Alan Turing"
+  },
+  {
+    "question": "What famous German code did Turing help crack during World War II?",
+    "answer": "Enigma"
+  },
+  {
+    "question": "What is the name of the test Turing proposed to evaluate a machine's intelligence?",
+    "answer": "Turing Test"
+  },
+  {
+    "question": "In which decade did Alan Turing work on the Turing Machine concept?",
+    "answer": "1930s"
+  },
+  {
+    "question": "What was the name of the British code-breaking center where Turing worked?",
+    "answer": "Bletchley Park"
+  },
+  {
+    "question": "What mathematical concept did Turing use to describe computation?",
+    "answer": "Turing Machine"
+  },
+  {
+    "question": "What is the field of study that Turing is credited with helping to create?",
+    "answer": "Artificial Intelligence"
+  },
+  {
+    "question": "Which country apologized in 2009 for how it treated Turing?",
+    "answer": "United Kingdom"
+  },
+  {
+    "question": "What year was Alan Turing born?",
+    "answer": "1912"
+  },
+  {
+    "question": "What kind of punishment was Turing subjected to for being gay?",
+    "answer": "Chemical castration"
+  }
+]

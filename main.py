@@ -7,7 +7,7 @@ import os
 def Getdata():
     path = os.path.join(os.path.dirname(__file__), "Turing_facts.json")#gets the file path for the json data
     try:
-        with open("c:/Users/Admin/Desktop/New folder/Turining_facts.json", "r") as file:
+        with open("ENTER OS PATH AND MAKE SURE THE MAIN AND JSON FILE ARE IN THE SAME FOLDER", "r") as file:
             return json.load(file)
     except FileNotFoundError:
         print("Could not find Turing_facts.json")
